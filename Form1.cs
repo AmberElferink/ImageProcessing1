@@ -107,7 +107,7 @@ namespace INFOIBV
                 for (int y = 0; y < InputImage.Size.Height; y++)
                 {
                     Color pixelColor = Image[x, y];
-                    int newGrey = (pixelColor.R + pixelColor.G + pixelColor.B) / 3;         //newGrey wordt voor iedere pixel berekend, gebaseerd op formule uit boek
+                    int newGrey = (pixelColor.R + pixelColor.G + pixelColor.B) / 3;         //newGrey wordt voor iedere pixel berekend
                     newGrey = (newGrey - alow) * 255 / (ahigh - alow);
 
                     Color updatedColor = Color.FromArgb(newGrey, newGrey, newGrey);
@@ -115,8 +115,9 @@ namespace INFOIBV
                     newHistogram[newGrey]++;
 
                     Image[x, y] = updatedColor;
-                    progressBar.PerformStep();
+                   
                 }
+                progressBar.PerformStep();
             }
 
             Console.WriteLine("New histogram: ");
@@ -146,5 +147,92 @@ namespace INFOIBV
                 OutputImage.Save(saveImageDialog.FileName);                 // Save the output image
         }
 
+        private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void progressBar_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+
+
+        //Filter Radiobuttons
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (radioButton1.Checked == true)
+                ApplyGaussian();
+        }
+
+        private void ApplyGaussian()
+        {
+            try
+            {
+                // split the rows
+                string input = textBox1.Text;
+                string[] rows = input.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+
+                // split the columns and add to a 2D array
+
+                int[,] matrix = new int[rows.Length, rows.Length]; //creer M x M matrix afhankelijk van ingevoerde values
+
+                for (int i = 0; i < rows.Length; i++) 
+                {
+                    // alle 3 de rijen parsen
+                    int[] column = Array.ConvertAll(rows[i].Split(' '), int.Parse);
+
+                    if(column.Length != rows.Length)
+                    {
+                        throw new Exception("Provide a square matrix, with equal number of rows and columns");
+                    }
+
+                    // deze kolom op de goede plek in de matrix zetten
+                    for (int j = 0; j < rows.Length; j++)
+                        matrix[i, j] = column[j];
+                }
+                //de matrix is geparsed en de waardes zijn nu op te halen
+                Console.WriteLine("Done with parsing matrix");
+
+
+            }
+            catch(Exception e)
+            {
+                this.textBox2.Text = e.Message;
+            }
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void maskedTextBox1_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
+        {
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
