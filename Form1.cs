@@ -62,20 +62,72 @@ namespace INFOIBV
             //==========================================================================================
             // TODO: include here your own code
             // example: create a negative image
+            int[] histogram = new int[256];     //histogram aanmaken, alow en ahigh initialiseren
+            int alow = 255;
+            int ahigh = 0;
+
             for (int x = 0; x < InputImage.Size.Width; x++)
             {
                 for (int y = 0; y < InputImage.Size.Height; y++)
                 {
                     Color pixelColor = Image[x, y];                         // Get the pixel color at coordinate (x,y)
-                    Color updatedColor = Color.FromArgb(255 - pixelColor.R, 255 - pixelColor.G, 255 - pixelColor.B); // Negative image
-                    Image[x, y] = updatedColor;                             // Set the new pixel color at coordinate (x,y)
+                    //Color updatedColor = Color.FromArgb(255 - pixelColor.R, 255 - pixelColor.G, 255 - pixelColor.B); // Negative image
+                    int grey = (pixelColor.R + pixelColor.G + pixelColor.B) / 3;    //aanmaken grijswaarde op basis van RGB-values
+                    Color updatedColor = Color.FromArgb(grey, grey, grey);          //toepassen grijswaarde
+
+                    histogram[grey]++;      //histogram updaten
+
+                    //kijken of er nieuwe alow/ahigh gevonden is
+                    if (grey < alow)
+                    {
+                        alow = grey;
+                    }
+                    if (grey > ahigh)
+                    {
+                        ahigh = grey;
+                    }
+
+                    //Image[x, y] = updatedColor;                             // Set the new pixel color at coordinate (x,y)
                     progressBar.PerformStep();                              // Increment progress bar
                 }
             }
-            //==========================================================================================
 
-            // Copy array to output Bitmap
+            Console.WriteLine("Histogram:");                                //histogram wordt geprint
+            for(int a = 0; a < 256; a++)
+            {
+                Console.WriteLine(a + ": " + histogram[a]);
+            }
+            Console.WriteLine("A-low: " + alow);
+            Console.WriteLine("A-high: " + ahigh);
+
+            int[] newHistogram = new int[256];                              //nieuw histogram wordt aangemaakt (om te checken of het daadwerkelijk werkt)
+
             for (int x = 0; x < InputImage.Size.Width; x++)
+            {
+                for (int y = 0; y < InputImage.Size.Height; y++)
+                {
+                    Color pixelColor = Image[x, y];
+                    int newGrey = (pixelColor.R + pixelColor.G + pixelColor.B) / 3;         //newGrey wordt voor iedere pixel berekend, gebaseerd op formule uit boek
+                    newGrey = (newGrey - alow) * 255 / (ahigh - alow);
+
+                    Color updatedColor = Color.FromArgb(newGrey, newGrey, newGrey);
+
+                    newHistogram[newGrey]++;
+
+                    Image[x, y] = updatedColor;
+                    progressBar.PerformStep();
+                }
+            }
+
+            Console.WriteLine("New histogram: ");
+            for (int a = 0; a < 256; a++)
+            {
+                Console.WriteLine(a + ": " + newHistogram[a]);
+            }
+                    //==========================================================================================
+
+                    // Copy array to output Bitmap
+                    for (int x = 0; x < InputImage.Size.Width; x++)
             {
                 for (int y = 0; y < InputImage.Size.Height; y++)
                 {
