@@ -132,9 +132,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(1082, 59);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(223, 13);
+            this.label1.Size = new System.Drawing.Size(214, 13);
             this.label1.TabIndex = 8;
-            this.label1.Text = "Kernel: Input. Seperation by space and enters";
+            this.label1.Text = "Kernel input. Seperation by space and enter";
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // radioButton1
@@ -206,6 +206,7 @@
             // 
             this.textBox2.Location = new System.Drawing.Point(1085, 495);
             this.textBox2.Name = "textBox2";
+            this.textBox2.ReadOnly = true;
             this.textBox2.Size = new System.Drawing.Size(382, 20);
             this.textBox2.TabIndex = 14;
             this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
