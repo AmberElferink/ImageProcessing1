@@ -174,16 +174,19 @@ namespace INFOIBV
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
-
+            if (radioButton1.Checked)
+                textBox1.ReadOnly = false;
+            else
+                textBox1.ReadOnly = true;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             if (radioButton1.Checked == true)
-                ApplyGaussian();
+                ApplyLinearFilter();
         }
 
-        private void ApplyGaussian()
+        private void ApplyLinearFilter()
         {
             try
             {
