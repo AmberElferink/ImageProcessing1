@@ -17,6 +17,8 @@ namespace INFOIBV
         Color[,] Image;
         Color[,] newImage;
 
+
+
         public INFOIBV()
         {
             InitializeComponent();
@@ -181,6 +183,8 @@ namespace INFOIBV
             if (radioButton1.Checked == true)
                 ApplyLinearFilter();
 
+            else if (gaussianButton.Checked == true)
+                ApplyGaussianFilter();
             else if (radioButton3.Checked == true)
                 ApplyMedianFilter();
             else if (radioButton4.Checked == true)
@@ -218,6 +222,102 @@ namespace INFOIBV
                         Image[x, y] = updatedColor;
                         progressBar.PerformStep();
                     }
+                }
+            }
+
+            toOutputBitmap();
+        }
+
+        private void ApplyGaussianFilter()
+        {
+            // input lezen: eerst een double voor de sigma, dan een int voor de kernel size
+            double sigma;
+            int boxsize;
+            try
+            {
+                string[] input = gaussianInput.Text.Split();
+                sigma = double.Parse(input[0]);
+                boxsize = int.Parse(input[1]);
+                if (sigma <= 0 || boxsize <= 0)
+                {
+                    throw new Exception("Please use positive numbers only");
+                }
+                if (boxsize % 2 == 0)
+                {
+                    throw new Exception("Please make sure that the kernel size is an odd number");
+                }
+            }
+            catch (Exception e)
+            {
+                this.textBox2.Text = e.Message;
+                return ;
+            }
+
+            int filterBorder = (boxsize - 1) / 2;
+            float[] kernel = new float[boxsize];
+
+            // berekenen 1D gaussian filter, geplukt uit boek pagina 115
+            double sigma2 = sigma * sigma;
+            for (int j = 0; j < kernel.Length; j++)
+            {
+                double r = -1 * filterBorder + j;
+                kernel[j] = (float)Math.Exp(-0.5 * (r * r) / sigma2);
+                Console.WriteLine("Kernel " + r + ": " + kernel[j]);
+            }
+            
+            // maak arrays om tijdelijke variabelen in op te slaan
+            float[,] gaussian1DColor = new float[boxsize, boxsize];
+            float[,] gaussian2DColor = new float[boxsize, boxsize];
+            float[,] weight = new float[boxsize, boxsize];
+
+            // verzamel- en telvariabelen
+            float gaussianTotal = 0;
+            float weightTotal = 0;
+            int i = 0;
+
+            for (int x = filterBorder; x < InputImage.Size.Width - filterBorder; x++)
+            {
+                for (int y = filterBorder; y < InputImage.Size.Height - filterBorder; y++)
+                {
+                    gaussianTotal = 0;
+                    weightTotal = 0;
+                    i = 0;
+
+                    // 1D-gaussian wordt eerst horizontaal toegepast. Nieuwe grijswaarden en weights worden in bijbehorende arrays opgeslagen.
+                    for (int a = (filterBorder * -1); a <= filterBorder; a++)
+                    {
+                        i = 0;
+                        for (int b = (filterBorder * -1); b <= filterBorder; b++)
+                        {
+                            gaussian1DColor[a + filterBorder,b + filterBorder] = (Image[x + a, y + b].R * kernel[i]);
+                            weight[a + filterBorder, b + filterBorder] = kernel[i];
+                            i++;
+                        }
+                    }
+
+                    // 1D-gaussian wordt opnieuw toegepast, nu verticaal.
+                    // Grijswaarden uit de eerste keer worden gebruikt om de nieuwe grijswaarden te maken, en deze worden bij elkaar opgeteld.
+                    // Weights worden ook herberekend en bij elkaar opgeteld.
+                    i = 0;
+                    for (int a = (filterBorder * -1); a <= filterBorder; a++)
+                    {
+                        for (int b = (filterBorder * -1); b <= filterBorder; b++)
+                        {
+                            gaussian2DColor[a + filterBorder, b + filterBorder] = (gaussian1DColor[a + filterBorder, b + filterBorder] * kernel[i]);
+                            gaussianTotal = gaussianTotal + gaussian2DColor[a + filterBorder, b + filterBorder];
+                            weight[a + filterBorder, b + filterBorder] = weight[a + filterBorder, b + filterBorder] * kernel[i];
+                            weightTotal = weightTotal + weight[a + filterBorder, b + filterBorder];
+                        }
+                        i++;
+                    }
+
+                    // Totale som grijswaarden delen door totale weights om uiteindelijke grijswaarde te krijgen.
+                    int gaussianColor = (int)(gaussianTotal / weightTotal);
+
+
+                    Color updatedColor = Color.FromArgb(gaussianColor, gaussianColor, gaussianColor);
+                    Image[x, y] = updatedColor;
+                    progressBar.PerformStep();
                 }
             }
 
@@ -448,10 +548,15 @@ namespace INFOIBV
         }
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
         {
-            if (radioButton2.Checked)
-                textBox3.ReadOnly = false;
+            if (gaussianButton.Checked)
+            {
+                gaussianInput.ReadOnly = false;
+                textBox2.Text = "Please first enter a double and then an integer in the adjacent text box";
+            }
             else
-                textBox3.ReadOnly = true;
+            {
+                gaussianInput.ReadOnly = true;
+            }
         }
 
         private void radioButton3_CheckedChanged(object sender, EventArgs e)
