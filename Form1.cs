@@ -158,13 +158,7 @@ namespace INFOIBV
 
         //Filter Radiobuttons
 
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
-        {
-            if (radioButton1.Checked)
-                textBox1.ReadOnly = false;
-            else
-                textBox1.ReadOnly = true;
-        }
+
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -172,6 +166,9 @@ namespace INFOIBV
 
             if (radioButton1.Checked == true)
                 ApplyLinearFilter();
+
+            else if (radioButton3.Checked == true)
+                ApplyMedianFilter();
         }
 
         private void ApplyLinearFilter()
@@ -179,13 +176,9 @@ namespace INFOIBV
             int[,] matrix = ParseMatrix();
             if(matrix != null)
             {
-
-
                 // linear boxfilter
                 int boxsize = matrix.GetLength(0);        // lengte matrix wordt uitgelezen
                 int filterBorder = (boxsize - 1) / 2;       // hulpvariabele voor berekeningen
-
-
 
                 for (int x = filterBorder; x < InputImage.Size.Width - filterBorder; x++)
                 {
@@ -303,6 +296,54 @@ namespace INFOIBV
 
 
 
+        void ApplyMedianFilter()
+        {
+            int boxsize;
+            try
+            {
+                boxsize = int.Parse(medianSizeValue.Text);
+                if (boxsize <= 0)
+                    throw new Exception("Give a positive number");
+                else if (boxsize % 2 == 0)
+                    throw new Exception("Give an uneven number");
+
+            }
+            catch(Exception e)
+            {
+                textBox2.Text = e.Message;
+                return;
+            }
+
+            Color[,] newImage = new Color[InputImage.Size.Width, InputImage.Size.Height];
+            for (int x = boxsize; x < InputImage.Size.Width - boxsize; x++)
+            {
+                for (int y = boxsize; y < InputImage.Size.Height - boxsize; y++)
+                {
+                    int maxValue = 0;
+                    for (int a = (boxsize * -1); a <= boxsize; a++)
+                    {
+                        for (int b = (boxsize * -1); b <= boxsize; b++)
+                        {
+                            if (Image[x + a, y + b].R > maxValue)
+                            {
+                                maxValue = Image[x + a, y + b].R;
+                            }
+                        }
+                        Color updatedColor = Color.FromArgb(maxValue, maxValue, maxValue);
+                        newImage[x, y] = updatedColor;
+
+                    }
+                    progressBar.PerformStep();
+                }
+            }
+
+
+            toOutputBitmap();
+        }
+
+
+
+
         private void label2_Click(object sender, EventArgs e)
         {
 
@@ -323,10 +364,34 @@ namespace INFOIBV
 
         }
 
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton1.Checked)
+                textBox1.ReadOnly = false;
+            else
+                textBox1.ReadOnly = true;
+        }
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton2.Checked)
                 textBox3.ReadOnly = false;
+            else
+                textBox3.ReadOnly = true;
+        }
+
+        private void radioButton3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton3.Checked)
+                medianSizeValue.ReadOnly = false;
+            else
+                medianSizeValue.ReadOnly = true;
         }
     }
 }

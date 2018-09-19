@@ -47,6 +47,9 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.textBox3 = new System.Windows.Forms.TextBox();
+            this.sigma = new System.Windows.Forms.Label();
+            this.medianSize = new System.Windows.Forms.Label();
+            this.medianSizeValue = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
@@ -131,7 +134,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(1082, 59);
+            this.label1.Location = new System.Drawing.Point(1237, 82);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(214, 13);
             this.label1.TabIndex = 8;
@@ -170,8 +173,9 @@
             this.radioButton3.Size = new System.Drawing.Size(85, 17);
             this.radioButton3.TabIndex = 11;
             this.radioButton3.TabStop = true;
-            this.radioButton3.Text = "radioButton3";
+            this.radioButton3.Text = "Median Filter";
             this.radioButton3.UseVisualStyleBackColor = true;
+            this.radioButton3.CheckedChanged += new System.EventHandler(this.radioButton3_CheckedChanged);
             // 
             // radioButton4
             // 
@@ -196,7 +200,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(1085, 75);
+            this.textBox1.Location = new System.Drawing.Point(1240, 98);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
@@ -224,18 +228,48 @@
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(1200, 203);
+            this.textBox3.Location = new System.Drawing.Point(1240, 203);
             this.textBox3.Name = "textBox3";
             this.textBox3.ReadOnly = true;
-            this.textBox3.Size = new System.Drawing.Size(100, 20);
+            this.textBox3.Size = new System.Drawing.Size(56, 20);
             this.textBox3.TabIndex = 16;
             this.textBox3.TextChanged += new System.EventHandler(this.textBox3_TextChanged);
+            // 
+            // sigma
+            // 
+            this.sigma.AutoSize = true;
+            this.sigma.Location = new System.Drawing.Point(1200, 203);
+            this.sigma.Name = "sigma";
+            this.sigma.Size = new System.Drawing.Size(34, 13);
+            this.sigma.TabIndex = 17;
+            this.sigma.Text = "sigma";
+            this.sigma.Click += new System.EventHandler(this.label3_Click);
+            // 
+            // medianSize
+            // 
+            this.medianSize.AutoSize = true;
+            this.medianSize.Location = new System.Drawing.Point(1209, 226);
+            this.medianSize.Name = "medianSize";
+            this.medianSize.Size = new System.Drawing.Size(25, 13);
+            this.medianSize.TabIndex = 19;
+            this.medianSize.Text = "size";
+            // 
+            // medianSizeValue
+            // 
+            this.medianSizeValue.Location = new System.Drawing.Point(1240, 226);
+            this.medianSizeValue.Name = "medianSizeValue";
+            this.medianSizeValue.ReadOnly = true;
+            this.medianSizeValue.Size = new System.Drawing.Size(56, 20);
+            this.medianSizeValue.TabIndex = 18;
             // 
             // INFOIBV
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1479, 576);
+            this.Controls.Add(this.medianSize);
+            this.Controls.Add(this.medianSizeValue);
+            this.Controls.Add(this.sigma);
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBox2);
@@ -285,6 +319,9 @@
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.Label sigma;
+        private System.Windows.Forms.Label medianSize;
+        private System.Windows.Forms.TextBox medianSizeValue;
     }
 }
 
