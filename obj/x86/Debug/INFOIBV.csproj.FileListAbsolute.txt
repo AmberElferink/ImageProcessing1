@@ -7,3 +7,12 @@ D:\Shared\Image Processing\assignment\INFOIBV\obj\x86\Debug\GenerateResource.rea
 D:\Shared\Image Processing\assignment\INFOIBV\obj\x86\Debug\GenerateResource.write.1.tlog
 D:\Shared\Image Processing\assignment\INFOIBV\obj\x86\Debug\INFOIBV.exe
 D:\Shared\Image Processing\assignment\INFOIBV\obj\x86\Debug\INFOIBV.pdb
+D:\Code Repositories\INFOIBV\bin\Debug\INFOIBV.exe
+D:\Code Repositories\INFOIBV\bin\Debug\INFOIBV.pdb
+D:\Code Repositories\INFOIBV\obj\x86\Debug\INFOIBV.csprojAssemblyReference.cache
+D:\Code Repositories\INFOIBV\obj\x86\Debug\INFOIBV.INFOIBV.resources
+D:\Code Repositories\INFOIBV\obj\x86\Debug\INFOIBV.Properties.Resources.resources
+D:\Code Repositories\INFOIBV\obj\x86\Debug\INFOIBV.csproj.GenerateResource.cache
+D:\Code Repositories\INFOIBV\obj\x86\Debug\INFOIBV.csproj.CoreCompileInputs.cache
+D:\Code Repositories\INFOIBV\obj\x86\Debug\INFOIBV.exe
+D:\Code Repositories\INFOIBV\obj\x86\Debug\INFOIBV.pdb
