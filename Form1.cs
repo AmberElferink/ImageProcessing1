@@ -14,6 +14,7 @@ namespace INFOIBV
     {
         private Bitmap InputImage;
         private Bitmap OutputImage;
+        Color[,] Image;
 
         public INFOIBV()
         {
@@ -32,32 +33,17 @@ namespace INFOIBV
                     InputImage.Size.Height > 512 || InputImage.Size.Width > 512) // Dimension check
                     MessageBox.Show("Error in image dimensions (have to be > 0 and <= 512)");
                 else
-                    pictureBox1.Image = (Image) InputImage;                 // Display input image
+                {
+                    pictureBox1.Image = (Image)InputImage;                 // Display input image
+                }
+
+
             }
         }
 
         private void applyButton_Click(object sender, EventArgs e)
         {
-            if (InputImage == null) return;                                 // Get out if no input image
-            if (OutputImage != null) OutputImage.Dispose();                 // Reset output image
-            OutputImage = new Bitmap(InputImage.Size.Width, InputImage.Size.Height); // Create new output image
-            Color[,] Image = new Color[InputImage.Size.Width, InputImage.Size.Height]; // Create array to speed-up operations (Bitmap functions are very slow)
-
-            // Setup progress bar
-            progressBar.Visible = true;
-            progressBar.Minimum = 1;
-            progressBar.Maximum = InputImage.Size.Width * InputImage.Size.Height;
-            progressBar.Value = 1;
-            progressBar.Step = 1;
-
-            // Copy input Bitmap to array            
-            for (int x = 0; x < InputImage.Size.Width; x++)
-            {
-                for (int y = 0; y < InputImage.Size.Height; y++)
-                {
-                    Image[x, y] = InputImage.GetPixel(x, y);                // Set pixel color in array at (x,y)
-                }
-            }
+            resetForApply();
 
             //==========================================================================================
             // TODO: include here your own code
@@ -182,11 +168,95 @@ namespace INFOIBV
 
         private void button1_Click(object sender, EventArgs e)
         {
+            resetForApply();
+
             if (radioButton1.Checked == true)
                 ApplyLinearFilter();
         }
 
         private void ApplyLinearFilter()
+        {
+            int[,] matrix = ParseMatrix();
+            if(matrix != null)
+            {
+
+
+                // linear boxfilter
+                int boxsize = matrix.GetLength(0);        // lengte matrix wordt uitgelezen
+                int filterBorder = (boxsize - 1) / 2;       // hulpvariabele voor berekeningen
+
+
+
+                for (int x = filterBorder; x < InputImage.Size.Width - filterBorder; x++)
+                {
+                    for (int y = filterBorder; y < InputImage.Size.Height - filterBorder; y++)
+                    {
+                        int linearColor = 0;
+                        int matrixTotal = 0;        // totale waarde van alle weights van de matrix bij elkaar opgeteld
+                        for (int a = (filterBorder * -1); a <= filterBorder; a++)
+                        {
+                            for (int b = (filterBorder * -1); b <= filterBorder; b++)
+                            {
+                                linearColor = linearColor + (Image[x + a, y + b].R * matrix[a + filterBorder, b + filterBorder]);
+                                // weight van filter wordt per kernel pixel toegepast op image pixel
+                                matrixTotal = matrixTotal + matrix[a + filterBorder, b + filterBorder];
+                                // weight wordt opgeteld bij totaalsom van weights
+                            }
+                        }
+                        linearColor = linearColor / matrixTotal;
+
+                        Color updatedColor = Color.FromArgb(linearColor, linearColor, linearColor);
+                        Image[x, y] = updatedColor;
+                        progressBar.PerformStep();
+                    }
+                }
+            }
+
+            toOutputBitmap();
+        }
+
+        void resetForApply()
+        {
+            if (InputImage == null) return;                                 // Get out if no input image
+            if (OutputImage != null) OutputImage.Dispose();                 // Reset output image
+            OutputImage = new Bitmap(InputImage.Size.Width, InputImage.Size.Height); // Create new output image
+            Image = new Color[InputImage.Size.Width, InputImage.Size.Height]; // Create array to speed-up operations (Bitmap functions are very slow)
+
+
+            // Setup progress bar
+            progressBar.Visible = true;
+            progressBar.Minimum = 1;
+            progressBar.Maximum = InputImage.Size.Width * InputImage.Size.Height;
+            progressBar.Value = 1;
+            progressBar.Step = 1;
+
+            // Copy input Bitmap to array            
+            for (int x = 0; x < InputImage.Size.Width; x++)
+            {
+                for (int y = 0; y < InputImage.Size.Height; y++)
+                {
+                    Image[x, y] = InputImage.GetPixel(x, y);                // Set pixel color in array at (x,y)
+                }
+            }
+        }
+
+        void toOutputBitmap()
+        {
+            // Copy array to output Bitmap
+            for (int x = 0; x < InputImage.Size.Width; x++)
+            {
+                for (int y = 0; y < InputImage.Size.Height; y++)
+                {
+                    OutputImage.SetPixel(x, y, Image[x, y]);               // Set the pixel color at coordinate (x,y)
+                    //OutputImage.SetPixel(x, y, newImage[x, y]);
+                }
+            }
+
+            pictureBox2.Image = (Image)OutputImage;                         // Display output image
+            progressBar.Visible = false;                                    // Hide progress bar
+        }
+
+        int[,] ParseMatrix()
         {
             try
             {
@@ -198,49 +268,36 @@ namespace INFOIBV
 
                 int[,] matrix = new int[rows.Length, rows.Length]; //creer M x M matrix afhankelijk van ingevoerde values
 
-                for (int i = 0; i < rows.Length; i++) 
+                for (int i = 0; i < rows.Length; i++)
                 {
                     // alle 3 de rijen parsen
                     int[] column = Array.ConvertAll(rows[i].Split(' '), int.Parse);
 
-                    if(column.Length != rows.Length)
+                    if (column.Length != rows.Length)
                     {
                         throw new Exception("Provide a square matrix, with equal number of rows and columns");
                     }
+                    if (column.Length %2 == 0)
+                        throw new Exception("Provide a square matrix, with an odd number of columns and rows");
+
 
                     // deze kolom op de goede plek in de matrix zetten
                     for (int j = 0; j < rows.Length; j++)
                         matrix[i, j] = column[j];
                 }
-                //de matrix is geparsed en de waardes zijn nu op te halen
-                Console.WriteLine("Done with parsing matrix");
 
+                return matrix;
+                //de matrix is geparsed en de waardes zijn nu op te halen
 
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 this.textBox2.Text = e.Message;
+                return null;
             }
 
-        }
+            
 
-
-
-
-        //Source: https://stackoverflow.com/questions/1797907/which-radio-button-in-the-group-is-checked
-        RadioButton GetCheckedRadio(Control container)
-        {
-            foreach (var control in container.Controls)
-            {
-                RadioButton radio = control as RadioButton;
-
-                if (radio != null && radio.Checked)
-                {
-                    return radio;
-                }
-            }
-
-            return null;
         }
 
 
