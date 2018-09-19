@@ -128,29 +128,47 @@ namespace INFOIBV
             }
     
 
-            int boxsize = 2;
-            for (int x = boxsize; x < InputImage.Size.Width - boxsize; x++)
+            */
+            // linear boxfilter
+            int boxsize = 5;        // lengte matrix wordt uitgelezen
+            int filterBorder = (boxsize - 1) / 2;       // hulpvariabele voor berekeningen
+            int[,] filterMatrix = new int[boxsize, boxsize];        // uitgelezen matrix
+
+            // testmatrix: moet later ingelezen worden vanuit text field
+            // belangrijk: alleen maar matrices van oneven grootte (3x3, 5x5 etc)
+            for (int i = 0; i < boxsize; i++)
             {
-                for (int y = boxsize; y < InputImage.Size.Height - boxsize; y++)
+                for (int j = 0; j < boxsize; j++)
                 {
-                    int newestGrey = 0;
-                    for (int a = (boxsize * -1); a <= boxsize; a++)
+                    filterMatrix[i, j] = 1;
+                }
+            }
+            
+            for (int x = filterBorder; x < InputImage.Size.Width - filterBorder; x++)
+            {
+                for (int y = filterBorder; y < InputImage.Size.Height - filterBorder; y++)
+                {
+                    int linearColor = 0;
+                    int matrixTotal = 0;        // totale waarde van alle weights van de matrix bij elkaar opgeteld
+                    for (int a = (filterBorder * -1); a <= filterBorder; a++)
                     {
-                        for (int b = (boxsize * -1); b <= boxsize; b++)
+                        for (int b = (filterBorder * -1); b <= filterBorder; b++)
                         {
-                            newestGrey = newestGrey + Image[x + a, y + b].R;
+                            linearColor = linearColor + (Image[x + a, y + b].R * filterMatrix[a + filterBorder, b + filterBorder]);
+                            // weight van filter wordt per kernel pixel toegepast op image pixel
+                            matrixTotal = matrixTotal + filterMatrix[a + filterBorder, b + filterBorder];
+                            // weight wordt opgeteld bij totaalsom van weights
                         }
                     }
-                    newestGrey = newestGrey / ((int)Math.Pow(((2 * boxsize) + 1), 2));
+                    linearColor = linearColor / matrixTotal;
 
-                    Color updatedColor = Color.FromArgb(newestGrey, newestGrey, newestGrey);
+                    Color updatedColor = Color.FromArgb(linearColor, linearColor, linearColor);
                     Image[x, y] = updatedColor;
                     progressBar.PerformStep();
                 }
             }
 
-    
-            */
+    /*
             int boxsize = 2;
             Color[,] newImage = new Color[InputImage.Size.Width, InputImage.Size.Height];
             for (int x = boxsize; x < InputImage.Size.Width - boxsize; x++)
@@ -173,15 +191,17 @@ namespace INFOIBV
                     }
                 }
             }
-                    //==========================================================================================
+                 
+    */
+    //==========================================================================================
 
                     // Copy array to output Bitmap
         for (int x = 0; x < InputImage.Size.Width; x++)
             {
                 for (int y = 0; y < InputImage.Size.Height; y++)
                 {
-                    //OutputImage.SetPixel(x, y, Image[x, y]);               // Set the pixel color at coordinate (x,y)
-                    OutputImage.SetPixel(x, y, newImage[x, y]);
+                    OutputImage.SetPixel(x, y, Image[x, y]);               // Set the pixel color at coordinate (x,y)
+                    //OutputImage.SetPixel(x, y, newImage[x, y]);
                 }
             }
 
