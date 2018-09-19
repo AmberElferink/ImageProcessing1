@@ -62,6 +62,7 @@ namespace INFOIBV
             //==========================================================================================
             // TODO: include here your own code
             // example: create a negative image
+            
             int[] histogram = new int[256];     //histogram aanmaken, alow en ahigh initialiseren
             int alow = 255;
             int ahigh = 0;
@@ -99,9 +100,9 @@ namespace INFOIBV
             }
             Console.WriteLine("A-low: " + alow);
             Console.WriteLine("A-high: " + ahigh);
-
+            /*
             int[] newHistogram = new int[256];                              //nieuw histogram wordt aangemaakt (om te checken of het daadwerkelijk werkt)
-
+            
             for (int x = 0; x < InputImage.Size.Width; x++)
             {
                 for (int y = 0; y < InputImage.Size.Height; y++)
@@ -114,28 +115,77 @@ namespace INFOIBV
 
                     newHistogram[newGrey]++;
 
-                    Image[x, y] = updatedColor;
+                    //Image[x, y] = updatedColor;
                     progressBar.PerformStep();
                 }
             }
+
 
             Console.WriteLine("New histogram: ");
             for (int a = 0; a < 256; a++)
             {
                 Console.WriteLine(a + ": " + newHistogram[a]);
             }
+    
+
+            int boxsize = 2;
+            for (int x = boxsize; x < InputImage.Size.Width - boxsize; x++)
+            {
+                for (int y = boxsize; y < InputImage.Size.Height - boxsize; y++)
+                {
+                    int newestGrey = 0;
+                    for (int a = (boxsize * -1); a <= boxsize; a++)
+                    {
+                        for (int b = (boxsize * -1); b <= boxsize; b++)
+                        {
+                            newestGrey = newestGrey + Image[x + a, y + b].R;
+                        }
+                    }
+                    newestGrey = newestGrey / ((int)Math.Pow(((2 * boxsize) + 1), 2));
+
+                    Color updatedColor = Color.FromArgb(newestGrey, newestGrey, newestGrey);
+                    Image[x, y] = updatedColor;
+                    progressBar.PerformStep();
+                }
+            }
+
+    
+            */
+            int boxsize = 2;
+            Color[,] newImage = new Color[InputImage.Size.Width, InputImage.Size.Height];
+            for (int x = boxsize; x < InputImage.Size.Width - boxsize; x++)
+            {
+                for (int y = boxsize; y < InputImage.Size.Height - boxsize; y++)
+                {
+                    int maxValue = 0;
+                    for (int a = (boxsize * -1); a <= boxsize; a++)
+                    {
+                        for (int b = (boxsize * -1); b <= boxsize; b++)
+                        {
+                            if (Image[x + a, y + b].R > maxValue)
+                            {
+                                maxValue = Image[x + a, y + b].R;
+                            }
+                        }
+                        Color updatedColor = Color.FromArgb(maxValue, maxValue, maxValue);
+                        newImage[x, y] = updatedColor;
+                        progressBar.PerformStep();
+                    }
+                }
+            }
                     //==========================================================================================
 
                     // Copy array to output Bitmap
-                    for (int x = 0; x < InputImage.Size.Width; x++)
+        for (int x = 0; x < InputImage.Size.Width; x++)
             {
                 for (int y = 0; y < InputImage.Size.Height; y++)
                 {
-                    OutputImage.SetPixel(x, y, Image[x, y]);               // Set the pixel color at coordinate (x,y)
+                    //OutputImage.SetPixel(x, y, Image[x, y]);               // Set the pixel color at coordinate (x,y)
+                    OutputImage.SetPixel(x, y, newImage[x, y]);
                 }
             }
-            
-            pictureBox2.Image = (Image)OutputImage;                         // Display output image
+
+                    pictureBox2.Image = (Image)OutputImage;                         // Display output image
             progressBar.Visible = false;                                    // Hide progress bar
         }
         
