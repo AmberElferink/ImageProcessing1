@@ -50,6 +50,8 @@
             this.sigma = new System.Windows.Forms.Label();
             this.medianSize = new System.Windows.Forms.Label();
             this.medianSizeValue = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.maxFilterValue = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
@@ -182,11 +184,12 @@
             this.radioButton4.AutoSize = true;
             this.radioButton4.Location = new System.Drawing.Point(1104, 249);
             this.radioButton4.Name = "radioButton4";
-            this.radioButton4.Size = new System.Drawing.Size(85, 17);
+            this.radioButton4.Size = new System.Drawing.Size(70, 17);
             this.radioButton4.TabIndex = 12;
             this.radioButton4.TabStop = true;
-            this.radioButton4.Text = "radioButton4";
+            this.radioButton4.Text = "Max Filter";
             this.radioButton4.UseVisualStyleBackColor = true;
+            this.radioButton4.CheckedChanged += new System.EventHandler(this.radioButton4_CheckedChanged);
             // 
             // button1
             // 
@@ -262,11 +265,30 @@
             this.medianSizeValue.Size = new System.Drawing.Size(56, 20);
             this.medianSizeValue.TabIndex = 18;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(1209, 252);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(25, 13);
+            this.label3.TabIndex = 21;
+            this.label3.Text = "size";
+            // 
+            // maxFilterValue
+            // 
+            this.maxFilterValue.Location = new System.Drawing.Point(1240, 252);
+            this.maxFilterValue.Name = "maxFilterValue";
+            this.maxFilterValue.ReadOnly = true;
+            this.maxFilterValue.Size = new System.Drawing.Size(56, 20);
+            this.maxFilterValue.TabIndex = 20;
+            // 
             // INFOIBV
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1479, 576);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.maxFilterValue);
             this.Controls.Add(this.medianSize);
             this.Controls.Add(this.medianSizeValue);
             this.Controls.Add(this.sigma);
@@ -322,6 +344,8 @@
         private System.Windows.Forms.Label sigma;
         private System.Windows.Forms.Label medianSize;
         private System.Windows.Forms.TextBox medianSizeValue;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox maxFilterValue;
     }
 }
 

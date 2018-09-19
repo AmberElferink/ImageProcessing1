@@ -15,6 +15,7 @@ namespace INFOIBV
         private Bitmap InputImage;
         private Bitmap OutputImage;
         Color[,] Image;
+        Color[,] newImage;
 
         public INFOIBV()
         {
@@ -169,6 +170,8 @@ namespace INFOIBV
 
             else if (radioButton3.Checked == true)
                 ApplyMedianFilter();
+            else if (radioButton4.Checked == true)
+                ApplyMaxFilter();
         }
 
         private void ApplyLinearFilter()
@@ -298,17 +301,68 @@ namespace INFOIBV
 
         void ApplyMedianFilter()
         {
+            int halfboxSize;
+            int boxSize;
+            try
+            {
+                boxSize = int.Parse(medianSizeValue.Text);
+                if (boxSize <= 0)
+                    throw new Exception("Give a positive number");
+                else if (boxSize % 2 == 0)
+                    throw new Exception("Give an uneven number");
+                halfboxSize = boxSize / 2;
+            }
+            catch(Exception e)
+            {
+                textBox2.Text = e.Message;
+                return;
+            }
+
+            newImage = new Color[InputImage.Size.Width, InputImage.Size.Height];
+
+            int[] values = new int[boxSize*boxSize];
+
+            for (int x = halfboxSize; x < InputImage.Size.Width - halfboxSize; x++)
+            {
+                for (int y = halfboxSize; y < InputImage.Size.Height - halfboxSize; y++)
+                {
+                    int valueIndex= 0;
+                    for (int a = -halfboxSize; a <= halfboxSize; a++)
+                    {
+                        for (int b = -halfboxSize; b <= halfboxSize; b++)
+                        {
+                            values[valueIndex] = Image[x + a, y + b].R;
+                            valueIndex++;
+                        }
+                    }
+                    Array.Sort(values);
+                        
+                    int newColor = values[values.Length / 2];
+                    Color updatedColor = Color.FromArgb(newColor, newColor, newColor);
+
+                    newImage[x, y] = updatedColor;
+                    progressBar.PerformStep();
+                }
+            }
+            Image = newImage;
+
+            toOutputBitmap();
+        }
+
+
+        void ApplyMaxFilter()
+        {
             int boxsize;
             try
             {
-                boxsize = int.Parse(medianSizeValue.Text);
+                boxsize = int.Parse(maxFilterValue.Text);
                 if (boxsize <= 0)
                     throw new Exception("Give a positive number");
                 else if (boxsize % 2 == 0)
                     throw new Exception("Give an uneven number");
 
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 textBox2.Text = e.Message;
                 return;
@@ -336,12 +390,13 @@ namespace INFOIBV
                     progressBar.PerformStep();
                 }
             }
+            Image = newImage;
 
 
             toOutputBitmap();
         }
 
-
+        
 
 
         private void label2_Click(object sender, EventArgs e)
@@ -392,6 +447,14 @@ namespace INFOIBV
                 medianSizeValue.ReadOnly = false;
             else
                 medianSizeValue.ReadOnly = true;
+        }
+
+        private void radioButton4_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton4.Checked)
+                maxFilterValue.ReadOnly = false;
+            else
+                maxFilterValue.ReadOnly = true;
         }
     }
 }
