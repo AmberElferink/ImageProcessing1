@@ -221,7 +221,30 @@ namespace INFOIBV
             {
                 this.textBox2.Text = e.Message;
             }
+
         }
+
+
+
+
+        //Source: https://stackoverflow.com/questions/1797907/which-radio-button-in-the-group-is-checked
+        RadioButton GetCheckedRadio(Control container)
+        {
+            foreach (var control in container.Controls)
+            {
+                RadioButton radio = control as RadioButton;
+
+                if (radio != null && radio.Checked)
+                {
+                    return radio;
+                }
+            }
+
+            return null;
+        }
+
+
+
 
         private void label2_Click(object sender, EventArgs e)
         {
