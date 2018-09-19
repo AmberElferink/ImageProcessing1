@@ -44,6 +44,13 @@ namespace INFOIBV
 
         private void applyButton_Click(object sender, EventArgs e)
         {
+            if (InputImage == null)
+            {
+                textBox2.Text = "Please Load an image first.";
+                return;
+            }
+
+
             resetForApply();
 
             //==========================================================================================
@@ -163,6 +170,12 @@ namespace INFOIBV
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (InputImage == null)
+            {
+                textBox2.Text = "Please Load an image first.";
+                return;
+            }
+
             resetForApply();
 
             if (radioButton1.Checked == true)
