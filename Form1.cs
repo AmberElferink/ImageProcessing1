@@ -317,5 +317,16 @@ namespace INFOIBV
         {
 
         }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton2.Checked)
+                textBox3.ReadOnly = false;
+        }
     }
 }
