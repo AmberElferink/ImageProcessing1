@@ -39,10 +39,13 @@ namespace INFOIBV
                 {
                     pictureBox1.Image = (Image)InputImage;                 // Display input image
                 }
-
-
             }
         }
+
+
+
+
+
 
         private void applyButton_Click(object sender, EventArgs e)
         {
@@ -56,22 +59,47 @@ namespace INFOIBV
             resetForApply();
 
             //==========================================================================================
-            // TODO: include here your own code
-            // example: create a negative image
-            int[] histogram = new int[256];     //histogram aanmaken, alow en ahigh initialiseren
             int alow = 255;
             int ahigh = 0;
+            
+
+            //Met NoAutoContrHistogram worden de alow en ahigh bepaald die nodig zijn voor AutoContrHistogram
+            NoAutoContrHistogram(ref alow, ref ahigh);                          //met ref worden de daadwerkelijke variabelen aangepast, ipv alleen variabelen binnen de methode.
+            AutoContrHistogram(alow, ahigh);                                    //creeer met de gevonden waarden het histogram
+           
+                    //==========================================================================================
+
+                    // Copy array to output Bitmap
+                    for (int x = 0; x < InputImage.Size.Width; x++)
+            {
+                for (int y = 0; y < InputImage.Size.Height; y++)
+                {
+                    OutputImage.SetPixel(x, y, Image[x, y]);                         // Set the pixel color at coordinate (x,y)
+                }
+            }
+            
+            pictureBox2.Image = (Image)OutputImage;                                 // Display output image
+            progressBar.Visible = false;                                            // Hide progress bar
+        }
+
+
+
+
+
+        void NoAutoContrHistogram(ref int alow, ref int ahigh)
+        {
+            int[] histogram = new int[256];     //histogram aanmaken, alow en ahigh initialiseren
+
 
             for (int x = 0; x < InputImage.Size.Width; x++)
             {
                 for (int y = 0; y < InputImage.Size.Height; y++)
                 {
-                    Color pixelColor = Image[x, y];                         // Get the pixel color at coordinate (x,y)
-                    //Color updatedColor = Color.FromArgb(255 - pixelColor.R, 255 - pixelColor.G, 255 - pixelColor.B); // Negative image
-                    int grey = (pixelColor.R + pixelColor.G + pixelColor.B) / 3;    //aanmaken grijswaarde op basis van RGB-values
-                    Color updatedColor = Color.FromArgb(grey, grey, grey);          //toepassen grijswaarde
+                    Color pixelColor = Image[x, y];                                 // Get the pixel color at coordinate (x,y)
+                    int grey = (pixelColor.R + pixelColor.G + pixelColor.B) / 3;    // aanmaken grijswaarde op basis van RGB-values
+                    Color updatedColor = Color.FromArgb(grey, grey, grey);          // toepassen grijswaarde
 
-                    histogram[grey]++;      //histogram updaten
+                    histogram[grey]++;                                              // histogram updaten
 
                     //kijken of er nieuwe alow/ahigh gevonden is
                     if (grey < alow)
@@ -82,28 +110,34 @@ namespace INFOIBV
                     {
                         ahigh = grey;
                     }
-
-                    //Image[x, y] = updatedColor;                             // Set the new pixel color at coordinate (x,y)
-                    progressBar.PerformStep();                              // Increment progress bar
+                    progressBar.PerformStep();                                      // Increment progress bar
                 }
             }
 
-            Console.WriteLine("Histogram:");                                //histogram wordt geprint
-            for(int a = 0; a < 256; a++)
+            Console.WriteLine("Histogram:");                                        // histogram wordt geprint
+            for (int a = 0; a < 256; a++)
             {
                 Console.WriteLine(a + ": " + histogram[a]);
             }
             Console.WriteLine("A-low: " + alow);
             Console.WriteLine("A-high: " + ahigh);
+        }
+       
 
-            int[] newHistogram = new int[256];                              //nieuw histogram wordt aangemaakt (om te checken of het daadwerkelijk werkt)
+
+
+
+
+        void AutoContrHistogram(int alow, int ahigh)
+        {
+            int[] newHistogram = new int[256];                                       //nieuw histogram wordt aangemaakt (om te checken of het daadwerkelijk werkt)
 
             for (int x = 0; x < InputImage.Size.Width; x++)
             {
                 for (int y = 0; y < InputImage.Size.Height; y++)
                 {
                     Color pixelColor = Image[x, y];
-                    int newGrey = (pixelColor.R + pixelColor.G + pixelColor.B) / 3;         //newGrey wordt voor iedere pixel berekend
+                    int newGrey = (pixelColor.R + pixelColor.G + pixelColor.B) / 3;  //newGrey wordt voor iedere pixel berekend
                     newGrey = (newGrey - alow) * 255 / (ahigh - alow);
 
                     Color updatedColor = Color.FromArgb(newGrey, newGrey, newGrey);
@@ -111,62 +145,30 @@ namespace INFOIBV
                     newHistogram[newGrey]++;
 
                     Image[x, y] = updatedColor;
-                   
+
                 }
                 progressBar.PerformStep();
             }
 
-            Console.WriteLine("New histogram: ");
+            Console.WriteLine("New histogram made");
             for (int a = 0; a < 256; a++)
             {
                 Console.WriteLine(a + ": " + newHistogram[a]);
             }
-                    //==========================================================================================
-
-                    // Copy array to output Bitmap
-                    for (int x = 0; x < InputImage.Size.Width; x++)
-            {
-                for (int y = 0; y < InputImage.Size.Height; y++)
-                {
-                    OutputImage.SetPixel(x, y, Image[x, y]);               // Set the pixel color at coordinate (x,y)
-                }
-            }
-            
-            pictureBox2.Image = (Image)OutputImage;                         // Display output image
-            progressBar.Visible = false;                                    // Hide progress bar
         }
         
+
+
+
+
         private void saveButton_Click(object sender, EventArgs e)
         {
-            if (OutputImage == null) return;                                // Get out if no output image
+            if (OutputImage == null) return;                                            // Get out if no output image
             if (saveImageDialog.ShowDialog() == DialogResult.OK)
-                OutputImage.Save(saveImageDialog.FileName);                 // Save the output image
-        }
-
-        private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void progressBar_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
+                OutputImage.Save(saveImageDialog.FileName);                             // Save the output image
         }
 
 
-
-
-        //Filter Radiobuttons
 
 
 
@@ -196,38 +198,37 @@ namespace INFOIBV
 
 
 
-        private void ApplyLinearFilter()
+
+
+        void ApplyLinearFilter()
         {
             int[,] matrix = ParseMatrix();
-            LinearFilter(matrix);
-
-            toOutputBitmap();
-        }
-
-
-        void LinearFilter(int[,] matrix)
-        {
-
             if (matrix != null)
             {
                 // linear boxfilter
-                int boxsize = matrix.GetLength(0);          // lengte matrix wordt uitgelezen
-                int halfBoxSize = (boxsize - 1) / 2;       // hulpvariabele voor berekeningen
+                int boxsize = matrix.GetLength(0);                                           // lengte matrix wordt uitgelezen
+                int halfBoxSize = (boxsize - 1) / 2;                                        // hulpvariabele voor berekeningen
 
+                //loop over de image heen
                 for (int x = halfBoxSize; x < InputImage.Size.Width - halfBoxSize; x++)
                 {
                     for (int y = halfBoxSize; y < InputImage.Size.Height - halfBoxSize; y++)
                     {
+                        //bekijk voor elke pixel op de image wat de nieuwe kleur moet worden
                         int linearColor = CalculateNewColor(x, y, matrix, halfBoxSize);
-
                         Color updatedColor = Color.FromArgb(linearColor, linearColor, linearColor);
-                        Image[x, y] = updatedColor;
+                        newImage[x, y] = updatedColor;
                         progressBar.PerformStep();
                     }
                 }
             }
-
+            toOutputBitmap();
         }
+
+
+
+
+
 
         int CalculateNewColor(int x, int y, int[,] matrix, int halfBoxSize, bool divideByTotal = true)
         {
@@ -243,7 +244,7 @@ namespace INFOIBV
                     // weight wordt opgeteld bij totaalsom van weights
                 }
             }
-            if( divideByTotal == true)
+            if( divideByTotal == true) // Voor Edgestrength moet niet door het totaal gedeeld, dus kan hij uitgezet worden.
                 linearColor = linearColor / matrixTotal;
 
             return linearColor;
@@ -251,11 +252,104 @@ namespace INFOIBV
 
 
 
+
+
+
+
         private void ApplyGaussianFilter()
         {
             // input lezen: eerst een double voor de sigma, dan een int voor de kernel size
-            double sigma;
-            int boxsize;
+            double sigma = 0;
+            int boxsize = 0;
+
+            Boolean correctInput = ParseGaussianInput(ref sigma, ref boxsize);
+
+            if(correctInput)
+            {
+                int filterBorder = (boxsize - 1) / 2;                                       //hulpvariabele voor verdere berekeningen
+
+                float[] kernel = Create1DKernel(boxsize, sigma, filterBorder);
+
+                // maak arrays om tijdelijke variabelen in op te slaan
+                float[,] gaussian1DColor = new float[boxsize, boxsize];
+                float[,] gaussian2DColor = new float[boxsize, boxsize];
+                float[,] weight = new float[boxsize, boxsize];
+
+                // verzamel- en telvariabelen
+                float gaussianTotal = 0;
+                float weightTotal = 0;
+                int i = 0;
+
+
+                //Doorloop de image per pixel
+                for (int x = filterBorder; x < InputImage.Size.Width - filterBorder; x++)
+                {
+                    for (int y = filterBorder; y < InputImage.Size.Height - filterBorder; y++)
+                    {
+                        gaussianTotal = 0;
+                        weightTotal = 0;
+                        i = 0;
+
+                        // 1D-gaussian wordt eerst horizontaal toegepast. Nieuwe grijswaarden en weights worden in bijbehorende arrays opgeslagen.
+                        for (int a = -filterBorder; a <= filterBorder; a++)
+                        {
+                            i = 0;
+                            for (int b = -filterBorder; b <= filterBorder; b++)
+                            {
+                                gaussian1DColor[a + filterBorder, b + filterBorder] = (Image[x + a, y + b].R * kernel[i]);
+                                weight[a + filterBorder, b + filterBorder] = kernel[i];
+                                i++;
+                            }
+                        }
+
+                        // 1D-gaussian wordt opnieuw toegepast, nu verticaal.
+                        // Grijswaarden uit de eerste keer worden gebruikt om de nieuwe grijswaarden te maken, en deze worden bij elkaar opgeteld.
+                        // Weights worden ook herberekend en bij elkaar opgeteld.
+                        i = 0;
+                        for (int a = -filterBorder; a <= filterBorder; a++)
+                        {
+                            for (int b = -filterBorder; b <= filterBorder; b++)
+                            {
+                                gaussian2DColor[a + filterBorder, b + filterBorder] = (gaussian1DColor[a + filterBorder, b + filterBorder] * kernel[i]);
+                                gaussianTotal = gaussianTotal + gaussian2DColor[a + filterBorder, b + filterBorder];
+                                weight[a + filterBorder, b + filterBorder] = weight[a + filterBorder, b + filterBorder] * kernel[i];
+                                weightTotal = weightTotal + weight[a + filterBorder, b + filterBorder];
+                            }
+                            i++;
+                        }
+
+
+                        // Totale som grijswaarden delen door totale weights om uiteindelijke grijswaarde te krijgen.
+                        int gaussianColor = (int)(gaussianTotal / weightTotal);
+
+
+                        Color updatedColor = Color.FromArgb(gaussianColor, gaussianColor, gaussianColor);
+                        newImage[x, y] = updatedColor;
+                        progressBar.PerformStep();
+                    }
+                }
+
+                string gaussianOutput = "";
+                for (int k = 0; k < boxsize; k++)
+                {
+                    for (int j = 0; j < boxsize; j++)
+                    {
+                        gaussianOutput += ((weight[k, j] / weightTotal) + " ");
+                    }
+                    gaussianOutput += "\r\n";
+                }
+                textBox1.Text = gaussianOutput;
+
+                toOutputBitmap();
+            }         
+        }
+
+
+
+
+
+        Boolean ParseGaussianInput(ref double sigma, ref int boxsize)
+        {
             try
             {
                 string[] input = gaussianInput.Text.Split();
@@ -273,13 +367,21 @@ namespace INFOIBV
             catch (Exception e)
             {
                 this.textBox2.Text = e.Message;
-                return ;
+                return false;
             }
+            return true;
+        }
 
-            int filterBorder = (boxsize - 1) / 2;
+
+
+
+
+
+        float[] Create1DKernel(int boxsize, double sigma, int filterBorder)
+        {
             float[] kernel = new float[boxsize];
 
-            // berekenen 1D gaussian filter, geplukt uit boek pagina 115
+            // berekenen 1D gaussian filter, uit boek pagina 115
             double sigma2 = sigma * sigma;
             float countingKernel = 0;
             for (int j = 0; j < kernel.Length; j++)
@@ -291,82 +393,13 @@ namespace INFOIBV
             for (int j = 0; j < kernel.Length; j++)
             {
                 kernel[j] = kernel[j] / countingKernel;
-                Console.WriteLine("Kernel " + (j) + ": " + kernel[j]);
             }
-            
-            // maak arrays om tijdelijke variabelen in op te slaan
-            float[,] gaussian1DColor = new float[boxsize, boxsize];
-            float[,] gaussian2DColor = new float[boxsize, boxsize];
-            float[,] weight = new float[boxsize, boxsize];
-
-            // verzamel- en telvariabelen
-            float gaussianTotal = 0;
-            float weightTotal = 0;
-            int i = 0;
-
-            newImage = new Color[InputImage.Size.Width, InputImage.Size.Height];
-
-            for (int x = filterBorder; x < InputImage.Size.Width - filterBorder; x++)
-            {
-                for (int y = filterBorder; y < InputImage.Size.Height - filterBorder; y++)
-                {
-                    gaussianTotal = 0;
-                    weightTotal = 0;
-                    i = 0;
-
-                    // 1D-gaussian wordt eerst horizontaal toegepast. Nieuwe grijswaarden en weights worden in bijbehorende arrays opgeslagen.
-                    for (int a = (filterBorder * -1); a <= filterBorder; a++)
-                    {
-                        i = 0;
-                        for (int b = (filterBorder * -1); b <= filterBorder; b++)
-                        {
-                            gaussian1DColor[a + filterBorder,b + filterBorder] = (Image[x + a, y + b].R * kernel[i]);
-                            weight[a + filterBorder, b + filterBorder] = kernel[i];
-                            i++;
-                        }
-                    }
-
-                    // 1D-gaussian wordt opnieuw toegepast, nu verticaal.
-                    // Grijswaarden uit de eerste keer worden gebruikt om de nieuwe grijswaarden te maken, en deze worden bij elkaar opgeteld.
-                    // Weights worden ook herberekend en bij elkaar opgeteld.
-                    i = 0;
-                    for (int a = (filterBorder * -1); a <= filterBorder; a++)
-                    {
-                        for (int b = (filterBorder * -1); b <= filterBorder; b++)
-                        {
-                            gaussian2DColor[a + filterBorder, b + filterBorder] = (gaussian1DColor[a + filterBorder, b + filterBorder] * kernel[i]);
-                            gaussianTotal = gaussianTotal + gaussian2DColor[a + filterBorder, b + filterBorder];
-                            weight[a + filterBorder, b + filterBorder] = weight[a + filterBorder, b + filterBorder] * kernel[i];
-                            weightTotal = weightTotal + weight[a + filterBorder, b + filterBorder];
-                        }
-                        i++;
-                    }
-                    Console.WriteLine(weightTotal);
-
-
-                    // Totale som grijswaarden delen door totale weights om uiteindelijke grijswaarde te krijgen.
-                    int gaussianColor = (int)(gaussianTotal / weightTotal);
-
-
-                    Color updatedColor = Color.FromArgb(gaussianColor, gaussianColor, gaussianColor);
-                    newImage[x, y] = updatedColor;
-                    progressBar.PerformStep();
-                }
-            }
-            string gaussianOutput = "";
-            for (int k = 0; k < boxsize; k++)
-            {
-                for (int j = 0; j < boxsize; j++)
-                {
-                    gaussianOutput += ((weight[k, j] / weightTotal) + " ");
-                }
-                gaussianOutput += "\r\n";
-            }
-            textBox1.Text = gaussianOutput;
-
-            Image = newImage;
-            toOutputBitmap();
+            return kernel;
         }
+
+
+
+
 
         private void ApplyThresholdFilter()
         {
@@ -391,6 +424,12 @@ namespace INFOIBV
             }
             toOutputBitmap();
         }
+
+
+
+
+
+
 
         void resetForApply()
         {
@@ -417,8 +456,17 @@ namespace INFOIBV
             }
         }
 
+
+
+
+
+
+
+
+
         void toOutputBitmap()
         {
+            Image = newImage;
             // Copy array to output Bitmap
             for (int x = 0; x < InputImage.Size.Width; x++)
             {
@@ -432,6 +480,13 @@ namespace INFOIBV
             pictureBox2.Image = (Image)OutputImage;                         // Display output image
             progressBar.Visible = false;                                    // Hide progress bar
         }
+
+
+
+
+
+
+
 
         int[,] ParseMatrix()
         {
@@ -473,10 +528,10 @@ namespace INFOIBV
                 this.textBox2.Text = e.Message;
                 return null;
             }
-
-            
-
         }
+
+
+
 
 
 
@@ -524,10 +579,18 @@ namespace INFOIBV
                     progressBar.PerformStep();
                 }
             }
-            Image = newImage;
 
             toOutputBitmap();
         }
+
+
+
+
+
+
+
+
+
 
 
         void ApplyMaxFilter()
@@ -566,17 +629,24 @@ namespace INFOIBV
                             }
                         }
                         Color updatedColor = Color.FromArgb(maxValue, maxValue, maxValue);
-                        newImage[x, y] = updatedColor;
+                        Image[x, y] = updatedColor;
 
                     }
                     progressBar.PerformStep();
                 }
             }
-            Image = newImage;
-
-
             toOutputBitmap();
         }
+
+
+
+
+
+
+
+
+
+
 
 
         void ApplyEdgeDetection()
@@ -610,7 +680,6 @@ namespace INFOIBV
                 }
                 progressBar.PerformStep();
             }
-            Image = newImage;
             toOutputBitmap();
         }
 
@@ -620,30 +689,7 @@ namespace INFOIBV
         
 
 
-        private void label2_Click(object sender, EventArgs e)
-        {
 
-        }
-
-        private void maskedTextBox1_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
-        {
-
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox3_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
 
 
 
@@ -702,11 +748,6 @@ namespace INFOIBV
                 thresholdTrackbar.Enabled = true;
             else
                 thresholdTrackbar.Enabled = false;
-        }
-
-        private void thresholdValue_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

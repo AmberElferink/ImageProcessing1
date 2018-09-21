@@ -95,7 +95,7 @@
             // 
             // applyButton
             // 
-            this.applyButton.Location = new System.Drawing.Point(1077, 11);
+            this.applyButton.Location = new System.Drawing.Point(948, 14);
             this.applyButton.Name = "applyButton";
             this.applyButton.Size = new System.Drawing.Size(210, 23);
             this.applyButton.TabIndex = 3;
@@ -110,7 +110,7 @@
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(948, 11);
+            this.saveButton.Location = new System.Drawing.Point(1232, 14);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(95, 23);
             this.saveButton.TabIndex = 4;
@@ -129,13 +129,12 @@
             // 
             // progressBar
             // 
-            this.progressBar.Location = new System.Drawing.Point(587, 14);
+            this.progressBar.Location = new System.Drawing.Point(531, 14);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(276, 20);
+            this.progressBar.Size = new System.Drawing.Size(394, 20);
             this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progressBar.TabIndex = 6;
             this.progressBar.Visible = false;
-            this.progressBar.Click += new System.EventHandler(this.progressBar_Click);
             // 
             // label1
             // 
@@ -145,7 +144,6 @@
             this.label1.Size = new System.Drawing.Size(214, 13);
             this.label1.TabIndex = 8;
             this.label1.Text = "Kernel input. Seperation by space and enter";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // radioButton1
             // 
@@ -197,7 +195,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(948, 309);
+            this.button1.Location = new System.Drawing.Point(952, 338);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 13;
@@ -208,13 +206,12 @@
             // textBox1
             // 
             this.textBox1.Location = new System.Drawing.Point(948, 84);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(246, 99);
             this.textBox1.TabIndex = 7;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // textBox2
             // 
@@ -223,7 +220,6 @@
             this.textBox2.ReadOnly = true;
             this.textBox2.Size = new System.Drawing.Size(382, 20);
             this.textBox2.TabIndex = 14;
-            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // label2
             // 
@@ -241,7 +237,6 @@
             this.gaussianInput.ReadOnly = true;
             this.gaussianInput.Size = new System.Drawing.Size(100, 20);
             this.gaussianInput.TabIndex = 16;
-            this.gaussianInput.TextChanged += new System.EventHandler(this.textBox3_TextChanged);
             // 
             // medianSize
             // 
@@ -256,7 +251,7 @@
             // medianSizeValue
             // 
             this.medianSizeValue.Location = new System.Drawing.Point(1071, 233);
-            this.medianSizeValue.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.medianSizeValue.Margin = new System.Windows.Forms.Padding(2);
             this.medianSizeValue.Name = "medianSizeValue";
             this.medianSizeValue.ReadOnly = true;
             this.medianSizeValue.Size = new System.Drawing.Size(43, 20);
@@ -275,17 +270,25 @@
             // maxFilterValue
             // 
             this.maxFilterValue.Location = new System.Drawing.Point(1071, 256);
-            this.maxFilterValue.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.maxFilterValue.Margin = new System.Windows.Forms.Padding(2);
             this.maxFilterValue.Name = "maxFilterValue";
             this.maxFilterValue.ReadOnly = true;
             this.maxFilterValue.Size = new System.Drawing.Size(43, 20);
             this.maxFilterValue.TabIndex = 20;
             // 
+            // edgeDetection
+            // 
+            this.edgeDetection.Location = new System.Drawing.Point(948, 301);
+            this.edgeDetection.Name = "edgeDetection";
+            this.edgeDetection.Size = new System.Drawing.Size(104, 24);
+            this.edgeDetection.TabIndex = 26;
+            this.edgeDetection.Text = "Edge Detection";
+            // 
             // thresholdTrackbar
             // 
             this.thresholdTrackbar.Enabled = false;
             this.thresholdTrackbar.Location = new System.Drawing.Point(1049, 279);
-            this.thresholdTrackbar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.thresholdTrackbar.Margin = new System.Windows.Forms.Padding(2);
             this.thresholdTrackbar.Maximum = 255;
             this.thresholdTrackbar.Name = "thresholdTrackbar";
             this.thresholdTrackbar.Size = new System.Drawing.Size(94, 45);
@@ -303,13 +306,12 @@
             this.thresholdValue.TabIndex = 24;
             this.thresholdValue.Text = "127";
             this.thresholdValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.thresholdValue.Click += new System.EventHandler(this.thresholdValue_Click);
             // 
             // thresholdButton
             // 
             this.thresholdButton.AutoSize = true;
             this.thresholdButton.Location = new System.Drawing.Point(948, 279);
-            this.thresholdButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.thresholdButton.Margin = new System.Windows.Forms.Padding(2);
             this.thresholdButton.Name = "thresholdButton";
             this.thresholdButton.Size = new System.Drawing.Size(97, 17);
             this.thresholdButton.TabIndex = 25;
