@@ -532,6 +532,7 @@ namespace INFOIBV
 
         void ApplyEdgeDetection()
         {
+            // 
             int[,] Hx = new int[,] { { -1, 0, 1 }, { -2, 0, 2 }, { -1, 0, 1 } };
             int[,] Hy = new int[,] { { -1, -2, -1 }, { 0, 0, 0 }, { 1, 2, 1 } };
 
@@ -542,9 +543,19 @@ namespace INFOIBV
             {
                 for (int y = halfboxsize; y < InputImage.Size.Height - halfboxsize; y++)
                 {
-                    float u = Math.Abs((1/8) * CalculateNewColor(x, y, Hx, halfboxsize, false));
-                    float v = Math.Abs((1/8) * CalculateNewColor(x, y, Hy, halfboxsize, false));
-                    int edgeStrength = (int)Math.Sqrt(u * u + v * v);
+                    float u = CalculateNewColor(x, y, Hx, halfboxsize, false) / 8; //apply Hx to the image pixel
+                    float v = CalculateNewColor(x, y, Hy, halfboxsize, false) / 8; //apply Hy to the image pixel
+
+                    
+                    int edgeStrength = (int)Math.Sqrt(u * u + v * v); //calculate edgestrength by calculating the length of vector [Hx, Hy]
+
+                    //clamp to max nad min values
+                    if (edgeStrength > 255)
+                        edgeStrength = 255;
+                    if (edgeStrength < 0)
+                        edgeStrength = 0;
+
+                    edgeStrength = 255 - edgeStrength;
                     Color updatedColor = Color.FromArgb(edgeStrength, edgeStrength, edgeStrength);
                     newImage[x, y] = updatedColor;
                 }
