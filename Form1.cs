@@ -196,7 +196,8 @@ namespace INFOIBV
         private void ApplyLinearFilter()
         {
             int[,] matrix = ParseMatrix();
-            if(matrix != null)
+            newImage = new Color[InputImage.Size.Width, InputImage.Size.Height];
+            if (matrix != null)
             {
                 // linear boxfilter
                 int boxsize = matrix.GetLength(0);        // lengte matrix wordt uitgelezen
@@ -221,12 +222,12 @@ namespace INFOIBV
                         linearColor = linearColor / matrixTotal;
 
                         Color updatedColor = Color.FromArgb(linearColor, linearColor, linearColor);
-                        Image[x, y] = updatedColor;
+                        newImage[x, y] = updatedColor;
                         progressBar.PerformStep();
                     }
                 }
             }
-
+            Image = newImage;
             toOutputBitmap();
         }
 
@@ -277,6 +278,8 @@ namespace INFOIBV
             float weightTotal = 0;
             int i = 0;
 
+            newImage = new Color[InputImage.Size.Width, InputImage.Size.Height];
+
             for (int x = filterBorder; x < InputImage.Size.Width - filterBorder; x++)
             {
                 for (int y = filterBorder; y < InputImage.Size.Height - filterBorder; y++)
@@ -318,11 +321,11 @@ namespace INFOIBV
 
 
                     Color updatedColor = Color.FromArgb(gaussianColor, gaussianColor, gaussianColor);
-                    Image[x, y] = updatedColor;
+                    newImage[x, y] = updatedColor;
                     progressBar.PerformStep();
                 }
             }
-
+            Image = newImage;
             toOutputBitmap();
         }
 
@@ -448,7 +451,7 @@ namespace INFOIBV
                 if (boxSize <= 0)
                     throw new Exception("Give a positive number");
                 else if (boxSize % 2 == 0)
-                    throw new Exception("Give an uneven number");
+                    throw new Exception("Give an odd number");
                 halfboxSize = boxSize / 2;
             }
             catch(Exception e)
@@ -492,13 +495,14 @@ namespace INFOIBV
         void ApplyMaxFilter()
         {
             int boxsize;
+            int halfboxsize;
             try
             {
                 boxsize = int.Parse(maxFilterValue.Text);
                 if (boxsize <= 0)
                     throw new Exception("Give a positive number");
                 else if (boxsize % 2 == 0)
-                    throw new Exception("Give an uneven number");
+                    throw new Exception("Give an odd number");
 
             }
             catch (Exception e)
@@ -507,15 +511,16 @@ namespace INFOIBV
                 return;
             }
 
+            halfboxsize = boxsize / 2;
             Color[,] newImage = new Color[InputImage.Size.Width, InputImage.Size.Height];
-            for (int x = boxsize; x < InputImage.Size.Width - boxsize; x++)
+            for (int x = halfboxsize; x < InputImage.Size.Width - halfboxsize; x++)
             {
-                for (int y = boxsize; y < InputImage.Size.Height - boxsize; y++)
+                for (int y = halfboxsize; y < InputImage.Size.Height - halfboxsize; y++)
                 {
                     int maxValue = 0;
-                    for (int a = (boxsize * -1); a <= boxsize; a++)
+                    for (int a = (halfboxsize * -1); a <= halfboxsize; a++)
                     {
-                        for (int b = (boxsize * -1); b <= boxsize; b++)
+                        for (int b = (halfboxsize * -1); b <= halfboxsize; b++)
                         {
                             if (Image[x + a, y + b].R > maxValue)
                             {
