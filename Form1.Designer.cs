@@ -51,6 +51,7 @@
             this.medianSizeValue = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.maxFilterValue = new System.Windows.Forms.TextBox();
+            this.edgeDetection = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
@@ -192,7 +193,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1104, 289);
+            this.button1.Location = new System.Drawing.Point(1104, 296);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 13;
@@ -203,7 +204,7 @@
             // textBox1
             // 
             this.textBox1.Location = new System.Drawing.Point(1126, 76);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
@@ -251,7 +252,7 @@
             // medianSizeValue
             // 
             this.medianSizeValue.Location = new System.Drawing.Point(1227, 225);
-            this.medianSizeValue.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.medianSizeValue.Margin = new System.Windows.Forms.Padding(2);
             this.medianSizeValue.Name = "medianSizeValue";
             this.medianSizeValue.ReadOnly = true;
             this.medianSizeValue.Size = new System.Drawing.Size(43, 20);
@@ -270,17 +271,29 @@
             // maxFilterValue
             // 
             this.maxFilterValue.Location = new System.Drawing.Point(1227, 248);
-            this.maxFilterValue.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.maxFilterValue.Margin = new System.Windows.Forms.Padding(2);
             this.maxFilterValue.Name = "maxFilterValue";
             this.maxFilterValue.ReadOnly = true;
             this.maxFilterValue.Size = new System.Drawing.Size(43, 20);
             this.maxFilterValue.TabIndex = 20;
+            // 
+            // edgeDetection
+            // 
+            this.edgeDetection.AutoSize = true;
+            this.edgeDetection.Location = new System.Drawing.Point(1104, 273);
+            this.edgeDetection.Name = "edgeDetection";
+            this.edgeDetection.Size = new System.Drawing.Size(99, 17);
+            this.edgeDetection.TabIndex = 22;
+            this.edgeDetection.TabStop = true;
+            this.edgeDetection.Text = "Edge Detection";
+            this.edgeDetection.UseVisualStyleBackColor = true;
             // 
             // INFOIBV
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1361, 468);
+            this.Controls.Add(this.edgeDetection);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.maxFilterValue);
             this.Controls.Add(this.medianSize);
@@ -338,6 +351,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox maxFilterValue;
         private System.Windows.Forms.TextBox gaussianInput;
+        private System.Windows.Forms.RadioButton edgeDetection;
     }
 }
 
