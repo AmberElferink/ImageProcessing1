@@ -41,7 +41,6 @@
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.gaussianButton = new System.Windows.Forms.RadioButton();
             this.radioButton3 = new System.Windows.Forms.RadioButton();
-            this.radioButton4 = new System.Windows.Forms.RadioButton();
             this.button1 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
@@ -49,8 +48,6 @@
             this.gaussianInput = new System.Windows.Forms.TextBox();
             this.medianSize = new System.Windows.Forms.Label();
             this.medianSizeValue = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.maxFilterValue = new System.Windows.Forms.TextBox();
             this.edgeDetection = new System.Windows.Forms.RadioButton();
             this.thresholdTrackbar = new System.Windows.Forms.TrackBar();
             this.thresholdValue = new System.Windows.Forms.Label();
@@ -181,21 +178,9 @@
             this.radioButton3.UseVisualStyleBackColor = true;
             this.radioButton3.CheckedChanged += new System.EventHandler(this.radioButton3_CheckedChanged);
             // 
-            // radioButton4
-            // 
-            this.radioButton4.AutoSize = true;
-            this.radioButton4.Location = new System.Drawing.Point(948, 257);
-            this.radioButton4.Name = "radioButton4";
-            this.radioButton4.Size = new System.Drawing.Size(70, 17);
-            this.radioButton4.TabIndex = 12;
-            this.radioButton4.TabStop = true;
-            this.radioButton4.Text = "Max Filter";
-            this.radioButton4.UseVisualStyleBackColor = true;
-            this.radioButton4.CheckedChanged += new System.EventHandler(this.radioButton4_CheckedChanged);
-            // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(952, 338);
+            this.button1.Location = new System.Drawing.Point(952, 316);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 13;
@@ -257,28 +242,9 @@
             this.medianSizeValue.Size = new System.Drawing.Size(43, 20);
             this.medianSizeValue.TabIndex = 18;
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(1042, 257);
-            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(25, 13);
-            this.label3.TabIndex = 21;
-            this.label3.Text = "size";
-            // 
-            // maxFilterValue
-            // 
-            this.maxFilterValue.Location = new System.Drawing.Point(1071, 256);
-            this.maxFilterValue.Margin = new System.Windows.Forms.Padding(2);
-            this.maxFilterValue.Name = "maxFilterValue";
-            this.maxFilterValue.ReadOnly = true;
-            this.maxFilterValue.Size = new System.Drawing.Size(43, 20);
-            this.maxFilterValue.TabIndex = 20;
-            // 
             // edgeDetection
             // 
-            this.edgeDetection.Location = new System.Drawing.Point(948, 301);
+            this.edgeDetection.Location = new System.Drawing.Point(948, 279);
             this.edgeDetection.Name = "edgeDetection";
             this.edgeDetection.Size = new System.Drawing.Size(104, 24);
             this.edgeDetection.TabIndex = 26;
@@ -287,7 +253,7 @@
             // thresholdTrackbar
             // 
             this.thresholdTrackbar.Enabled = false;
-            this.thresholdTrackbar.Location = new System.Drawing.Point(1049, 279);
+            this.thresholdTrackbar.Location = new System.Drawing.Point(1049, 257);
             this.thresholdTrackbar.Margin = new System.Windows.Forms.Padding(2);
             this.thresholdTrackbar.Maximum = 255;
             this.thresholdTrackbar.Name = "thresholdTrackbar";
@@ -299,7 +265,7 @@
             // thresholdValue
             // 
             this.thresholdValue.AutoSize = true;
-            this.thresholdValue.Location = new System.Drawing.Point(1148, 281);
+            this.thresholdValue.Location = new System.Drawing.Point(1148, 259);
             this.thresholdValue.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.thresholdValue.Name = "thresholdValue";
             this.thresholdValue.Size = new System.Drawing.Size(25, 13);
@@ -310,7 +276,7 @@
             // thresholdButton
             // 
             this.thresholdButton.AutoSize = true;
-            this.thresholdButton.Location = new System.Drawing.Point(948, 279);
+            this.thresholdButton.Location = new System.Drawing.Point(948, 257);
             this.thresholdButton.Margin = new System.Windows.Forms.Padding(2);
             this.thresholdButton.Name = "thresholdButton";
             this.thresholdButton.Size = new System.Drawing.Size(97, 17);
@@ -329,15 +295,12 @@
             this.Controls.Add(this.thresholdValue);
             this.Controls.Add(this.thresholdTrackbar);
             this.Controls.Add(this.edgeDetection);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.maxFilterValue);
             this.Controls.Add(this.medianSize);
             this.Controls.Add(this.medianSizeValue);
             this.Controls.Add(this.gaussianInput);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.radioButton4);
             this.Controls.Add(this.radioButton3);
             this.Controls.Add(this.gaussianButton);
             this.Controls.Add(this.radioButton1);
@@ -377,15 +340,12 @@
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.RadioButton gaussianButton;
         private System.Windows.Forms.RadioButton radioButton3;
-        private System.Windows.Forms.RadioButton radioButton4;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label medianSize;
         private System.Windows.Forms.TextBox medianSizeValue;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox maxFilterValue;
         private System.Windows.Forms.TextBox gaussianInput;
         private System.Windows.Forms.TrackBar thresholdTrackbar;
         private System.Windows.Forms.Label thresholdValue;

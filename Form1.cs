@@ -188,8 +188,6 @@ namespace INFOIBV
                 ApplyGaussianFilter();
             else if (radioButton3.Checked == true)
                 ApplyMedianFilter();
-            else if (radioButton4.Checked == true)
-                ApplyMaxFilter();
             else if (thresholdButton.Checked == true)
                 ApplyThresholdFilter();
             else if (edgeDetection.Checked == true)
@@ -418,7 +416,7 @@ namespace INFOIBV
                         thresholdColor = 255;
                     }
                     Color updatedColor = Color.FromArgb(thresholdColor, thresholdColor, thresholdColor);
-                    Image[x, y] = updatedColor;
+                    newImage[x, y] = updatedColor;
                     progressBar.PerformStep();
                 }
             }
@@ -584,71 +582,6 @@ namespace INFOIBV
         }
 
 
-
-
-
-
-
-
-
-
-
-        void ApplyMaxFilter()
-        {
-            int boxsize;
-            int halfboxsize;
-            try
-            {
-                boxsize = int.Parse(maxFilterValue.Text);
-                if (boxsize <= 0)
-                    throw new Exception("Give a positive number");
-                else if (boxsize % 2 == 0)
-                    throw new Exception("Give an odd number");
-
-            }
-            catch (Exception e)
-            {
-                textBox2.Text = e.Message;
-                return;
-            }
-
-            halfboxsize = boxsize / 2;
-            Color[,] newImage = new Color[InputImage.Size.Width, InputImage.Size.Height];
-            for (int x = halfboxsize; x < InputImage.Size.Width - halfboxsize; x++)
-            {
-                for (int y = halfboxsize; y < InputImage.Size.Height - halfboxsize; y++)
-                {
-                    int maxValue = 0;
-                    for (int a = (halfboxsize * -1); a <= halfboxsize; a++)
-                    {
-                        for (int b = (halfboxsize * -1); b <= halfboxsize; b++)
-                        {
-                            if (Image[x + a, y + b].R > maxValue)
-                            {
-                                maxValue = Image[x + a, y + b].R;
-                            }
-                        }
-                        Color updatedColor = Color.FromArgb(maxValue, maxValue, maxValue);
-                        Image[x, y] = updatedColor;
-
-                    }
-                    progressBar.PerformStep();
-                }
-            }
-            toOutputBitmap();
-        }
-
-
-
-
-
-
-
-
-
-
-
-
         void ApplyEdgeDetection()
         {
             // 
@@ -719,22 +652,6 @@ namespace INFOIBV
                 medianSizeValue.ReadOnly = false;
             else
                 medianSizeValue.ReadOnly = true;
-        }
-
-        private void radioButton4_CheckedChanged(object sender, EventArgs e)
-        {
-            if (radioButton4.Checked)
-                maxFilterValue.ReadOnly = false;
-            else
-                maxFilterValue.ReadOnly = true;
-        }
-
-        private void  edgeDetection_CheckedChanged(object sender, EventArgs e)
-        {
-            if (edgeDetection.Checked)
-                maxFilterValue.ReadOnly = false;
-            else
-                maxFilterValue.ReadOnly = true;
         }
         
         private void trackBar1_Scroll(object sender, EventArgs e)
