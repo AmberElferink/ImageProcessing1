@@ -3,7 +3,7 @@
 3. Gaussian filter: Toepassen 3x3 matrix met Gaussian verdeling (sigma afhankelijk)
 4. Linear filtering: Gewoon boxfilter
 5. Nonlinear filtering: min-max filter of median filter
-6. Edge detection: komt nog
+6. Edge detection: filter dat laat zien waar en hoe sterk een edge zit
 7. Thresholding: Neem een threshold, a < threshold -> a=0, a >= threshold -> a=255
 
 Images:

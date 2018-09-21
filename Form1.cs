@@ -189,6 +189,8 @@ namespace INFOIBV
                 ApplyMedianFilter();
             else if (radioButton4.Checked == true)
                 ApplyMaxFilter();
+            else if (thresholdButton.Checked == true)
+                ApplyThresholdFilter();
         }
 
         private void ApplyLinearFilter()
@@ -321,6 +323,30 @@ namespace INFOIBV
                 }
             }
 
+            toOutputBitmap();
+        }
+
+        private void ApplyThresholdFilter()
+        {
+            int thresholdColor = 0;
+            int thresholdLimit = thresholdTrackbar.Value;       // threshold wordt afgelezen van trackbar
+            for (int x = 0; x < InputImage.Size.Width; x++)
+            {
+                for (int y = 0; y < InputImage.Size.Height; y++)
+                {
+                    if (Image[x, y].R < thresholdLimit)
+                    {
+                        thresholdColor = 0;
+                    }
+                    else
+                    {
+                        thresholdColor = 255;
+                    }
+                    Color updatedColor = Color.FromArgb(thresholdColor, thresholdColor, thresholdColor);
+                    Image[x, y] = updatedColor;
+                    progressBar.PerformStep();
+                }
+            }
             toOutputBitmap();
         }
 
@@ -573,6 +599,24 @@ namespace INFOIBV
                 maxFilterValue.ReadOnly = false;
             else
                 maxFilterValue.ReadOnly = true;
+        }
+        
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            thresholdValue.Text = thresholdTrackbar.Value.ToString();
+        }
+
+        private void thresholdButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (thresholdButton.Checked)
+                thresholdTrackbar.Enabled = true;
+            else
+                thresholdTrackbar.Enabled = false;
+        }
+
+        private void thresholdValue_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
