@@ -261,11 +261,17 @@ namespace INFOIBV
 
             // berekenen 1D gaussian filter, geplukt uit boek pagina 115
             double sigma2 = sigma * sigma;
+            float countingKernel = 0;
             for (int j = 0; j < kernel.Length; j++)
             {
-                double r = -1 * filterBorder + j;
+                double r = filterBorder - j;
                 kernel[j] = (float)Math.Exp(-0.5 * (r * r) / sigma2);
-                Console.WriteLine("Kernel " + r + ": " + kernel[j]);
+                countingKernel += kernel[j];
+            }
+            for (int j = 0; j < kernel.Length; j++)
+            {
+                kernel[j] = kernel[j] / countingKernel;
+                Console.WriteLine("Kernel " + (j) + ": " + kernel[j]);
             }
             
             // maak arrays om tijdelijke variabelen in op te slaan
@@ -315,6 +321,8 @@ namespace INFOIBV
                         }
                         i++;
                     }
+                    Console.WriteLine(weightTotal);
+
 
                     // Totale som grijswaarden delen door totale weights om uiteindelijke grijswaarde te krijgen.
                     int gaussianColor = (int)(gaussianTotal / weightTotal);
@@ -325,6 +333,17 @@ namespace INFOIBV
                     progressBar.PerformStep();
                 }
             }
+            string gaussianOutput = "";
+            for (int k = 0; k < boxsize; k++)
+            {
+                for (int j = 0; j < boxsize; j++)
+                {
+                    gaussianOutput += ((weight[k, j] / weightTotal) + " ");
+                }
+                gaussianOutput += "\r\n";
+            }
+            textBox1.Text = gaussianOutput;
+
             Image = newImage;
             toOutputBitmap();
         }
