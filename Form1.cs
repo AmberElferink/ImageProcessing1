@@ -182,7 +182,6 @@ namespace INFOIBV
 
             if (radioButton1.Checked == true)
                 ApplyLinearFilter();
-
             else if (gaussianButton.Checked == true)
                 ApplyGaussianFilter();
             else if (radioButton3.Checked == true)
@@ -191,45 +190,66 @@ namespace INFOIBV
                 ApplyMaxFilter();
             else if (thresholdButton.Checked == true)
                 ApplyThresholdFilter();
+            else if (edgeDetection.Checked == true)
+                ApplyEdgeDetection();
         }
+
+
 
         private void ApplyLinearFilter()
         {
             int[,] matrix = ParseMatrix();
-            newImage = new Color[InputImage.Size.Width, InputImage.Size.Height];
+            LinearFilter(matrix);
+
+            toOutputBitmap();
+        }
+
+
+        void LinearFilter(int[,] matrix)
+        {
+
             if (matrix != null)
             {
                 // linear boxfilter
-                int boxsize = matrix.GetLength(0);        // lengte matrix wordt uitgelezen
-                int filterBorder = (boxsize - 1) / 2;       // hulpvariabele voor berekeningen
+                int boxsize = matrix.GetLength(0);          // lengte matrix wordt uitgelezen
+                int halfBoxSize = (boxsize - 1) / 2;       // hulpvariabele voor berekeningen
 
-                for (int x = filterBorder; x < InputImage.Size.Width - filterBorder; x++)
+                for (int x = halfBoxSize; x < InputImage.Size.Width - halfBoxSize; x++)
                 {
-                    for (int y = filterBorder; y < InputImage.Size.Height - filterBorder; y++)
+                    for (int y = halfBoxSize; y < InputImage.Size.Height - halfBoxSize; y++)
                     {
-                        int linearColor = 0;
-                        int matrixTotal = 0;        // totale waarde van alle weights van de matrix bij elkaar opgeteld
-                        for (int a = (filterBorder * -1); a <= filterBorder; a++)
-                        {
-                            for (int b = (filterBorder * -1); b <= filterBorder; b++)
-                            {
-                                linearColor = linearColor + (Image[x + a, y + b].R * matrix[a + filterBorder, b + filterBorder]);
-                                // weight van filter wordt per kernel pixel toegepast op image pixel
-                                matrixTotal = matrixTotal + matrix[a + filterBorder, b + filterBorder];
-                                // weight wordt opgeteld bij totaalsom van weights
-                            }
-                        }
-                        linearColor = linearColor / matrixTotal;
+                        int linearColor = CalculateNewColor(x, y, matrix, halfBoxSize);
 
                         Color updatedColor = Color.FromArgb(linearColor, linearColor, linearColor);
-                        newImage[x, y] = updatedColor;
+                        Image[x, y] = updatedColor;
                         progressBar.PerformStep();
                     }
                 }
             }
-            Image = newImage;
-            toOutputBitmap();
+
         }
+
+        int CalculateNewColor(int x, int y, int[,] matrix, int halfBoxSize, bool divideByTotal = true)
+        {
+            int linearColor = 0;
+            int matrixTotal = 0;                // totale waarde van alle weights van de matrix bij elkaar opgeteld
+            for (int a = (halfBoxSize * -1); a <= halfBoxSize; a++)
+            {
+                for (int b = (halfBoxSize * -1); b <= halfBoxSize; b++)
+                {
+                    linearColor = linearColor + (Image[x + a, y + b].R * matrix[a + halfBoxSize, b + halfBoxSize]);
+                    // weight van filter wordt per kernel pixel toegepast op image pixel
+                    matrixTotal = matrixTotal + matrix[a + halfBoxSize, b + halfBoxSize];
+                    // weight wordt opgeteld bij totaalsom van weights
+                }
+            }
+            if( divideByTotal == true)
+                linearColor = linearColor / matrixTotal;
+
+            return linearColor;
+        }
+
+
 
         private void ApplyGaussianFilter()
         {
@@ -378,7 +398,7 @@ namespace INFOIBV
             if (OutputImage != null) OutputImage.Dispose();                 // Reset output image
             OutputImage = new Bitmap(InputImage.Size.Width, InputImage.Size.Height); // Create new output image
             Image = new Color[InputImage.Size.Width, InputImage.Size.Height]; // Create array to speed-up operations (Bitmap functions are very slow)
-
+            newImage = new Color[InputImage.Size.Width, InputImage.Size.Height];
 
             // Setup progress bar
             progressBar.Visible = true;
@@ -446,6 +466,7 @@ namespace INFOIBV
                 return matrix;
                 //de matrix is geparsed en de waardes zijn nu op te halen
 
+
             }
             catch (Exception e)
             {
@@ -478,8 +499,6 @@ namespace INFOIBV
                 textBox2.Text = e.Message;
                 return;
             }
-
-            newImage = new Color[InputImage.Size.Width, InputImage.Size.Height];
 
             int[] values = new int[boxSize*boxSize];
 
@@ -559,6 +578,45 @@ namespace INFOIBV
             toOutputBitmap();
         }
 
+
+        void ApplyEdgeDetection()
+        {
+            // 
+            int[,] Hx = new int[,] { { -1, 0, 1 }, { -2, 0, 2 }, { -1, 0, 1 } };
+            int[,] Hy = new int[,] { { -1, -2, -1 }, { 0, 0, 0 }, { 1, 2, 1 } };
+
+
+            int halfboxsize = Hx.GetLength(0)/2;
+
+            for (int x = halfboxsize; x < InputImage.Size.Width - halfboxsize; x++)
+            {
+                for (int y = halfboxsize; y < InputImage.Size.Height - halfboxsize; y++)
+                {
+                    float u = CalculateNewColor(x, y, Hx, halfboxsize, false) / 8; //apply Hx to the image pixel
+                    float v = CalculateNewColor(x, y, Hy, halfboxsize, false) / 8; //apply Hy to the image pixel
+
+                    
+                    int edgeStrength = (int)Math.Sqrt(u * u + v * v); //calculate edgestrength by calculating the length of vector [Hx, Hy]
+
+                    //clamp to max nad min values
+                    if (edgeStrength > 255)
+                        edgeStrength = 255;
+                    if (edgeStrength < 0)
+                        edgeStrength = 0;
+
+                    edgeStrength = 255 - edgeStrength;
+                    Color updatedColor = Color.FromArgb(edgeStrength, edgeStrength, edgeStrength);
+                    newImage[x, y] = updatedColor;
+                }
+                progressBar.PerformStep();
+            }
+            Image = newImage;
+            toOutputBitmap();
+        }
+
+
+
+
         
 
 
@@ -620,6 +678,14 @@ namespace INFOIBV
         private void radioButton4_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton4.Checked)
+                maxFilterValue.ReadOnly = false;
+            else
+                maxFilterValue.ReadOnly = true;
+        }
+
+        private void  edgeDetection_CheckedChanged(object sender, EventArgs e)
+        {
+            if (edgeDetection.Checked)
                 maxFilterValue.ReadOnly = false;
             else
                 maxFilterValue.ReadOnly = true;

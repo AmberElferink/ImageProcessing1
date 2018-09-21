@@ -51,6 +51,7 @@
             this.medianSizeValue = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.maxFilterValue = new System.Windows.Forms.TextBox();
+            this.edgeDetection = new System.Windows.Forms.RadioButton();
             this.thresholdTrackbar = new System.Windows.Forms.TrackBar();
             this.thresholdValue = new System.Windows.Forms.Label();
             this.thresholdButton = new System.Windows.Forms.RadioButton();
@@ -325,6 +326,7 @@
             this.Controls.Add(this.thresholdButton);
             this.Controls.Add(this.thresholdValue);
             this.Controls.Add(this.thresholdTrackbar);
+            this.Controls.Add(this.edgeDetection);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.maxFilterValue);
             this.Controls.Add(this.medianSize);
@@ -386,6 +388,7 @@
         private System.Windows.Forms.TrackBar thresholdTrackbar;
         private System.Windows.Forms.Label thresholdValue;
         private System.Windows.Forms.RadioButton thresholdButton;
+        private System.Windows.Forms.RadioButton edgeDetection;
     }
 }
 
