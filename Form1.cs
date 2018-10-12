@@ -432,7 +432,28 @@ namespace INFOIBV
         void resetForApply()
         {
             if (InputImage == null) return;                                 // Get out if no input image
-            if (OutputImage != null) OutputImage.Dispose();                 // Reset output image
+
+            if (OutputImage != null)
+            {
+                if (RightAsInput.Checked)
+                {
+                    InputImage.Dispose();
+                    InputImage = new Bitmap(OutputImage.Size.Width, OutputImage.Size.Height);
+                    for (int x = 0; x < InputImage.Size.Width; x++)
+                    {
+                        for (int y = 0; y < InputImage.Size.Height; y++)
+                        {
+                            InputImage.SetPixel(x, y, Image[x, y]);               // Set the pixel color at coordinate (x,y)
+                                                                                   //OutputImage.SetPixel(x, y, newImage[x, y]);
+                        }
+                    }
+
+                }
+
+
+                OutputImage.Dispose();                 // Reset output image
+
+            }             // Reset output image
             OutputImage = new Bitmap(InputImage.Size.Width, InputImage.Size.Height); // Create new output image
             Image = new Color[InputImage.Size.Width, InputImage.Size.Height]; // Create array to speed-up operations (Bitmap functions are very slow)
             newImage = new Color[InputImage.Size.Width, InputImage.Size.Height];

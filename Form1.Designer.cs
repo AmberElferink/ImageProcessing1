@@ -52,6 +52,7 @@
             this.thresholdTrackbar = new System.Windows.Forms.TrackBar();
             this.thresholdValue = new System.Windows.Forms.Label();
             this.thresholdButton = new System.Windows.Forms.RadioButton();
+            this.RightAsInput = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.thresholdTrackbar)).BeginInit();
@@ -286,11 +287,22 @@
             this.thresholdButton.UseVisualStyleBackColor = true;
             this.thresholdButton.CheckedChanged += new System.EventHandler(this.thresholdButton_CheckedChanged);
             // 
+            // RightAsInput
+            // 
+            this.RightAsInput.AutoSize = true;
+            this.RightAsInput.Location = new System.Drawing.Point(948, 45);
+            this.RightAsInput.Name = "RightAsInput";
+            this.RightAsInput.Size = new System.Drawing.Size(142, 17);
+            this.RightAsInput.TabIndex = 27;
+            this.RightAsInput.Text = "use Right image as input";
+            this.RightAsInput.UseVisualStyleBackColor = true;
+            // 
             // INFOIBV
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1374, 447);
+            this.Controls.Add(this.RightAsInput);
             this.Controls.Add(this.thresholdButton);
             this.Controls.Add(this.thresholdValue);
             this.Controls.Add(this.thresholdTrackbar);
@@ -351,6 +363,7 @@
         private System.Windows.Forms.Label thresholdValue;
         private System.Windows.Forms.RadioButton thresholdButton;
         private System.Windows.Forms.RadioButton edgeDetection;
+        private System.Windows.Forms.CheckBox RightAsInput;
     }
 }
 
